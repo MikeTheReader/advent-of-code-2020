@@ -1,6 +1,7 @@
 // tslint:disable: no-console
 import * as chalk from 'chalk';
 import * as commander from 'commander';
+import * as fs from 'fs';
 import * as path from 'path';
 
 commander
@@ -9,7 +10,11 @@ commander
   .description('Executes the solution logic for a given day in the advent of code (1-25).')
   .option('--half [half]', 'Which half of the day to excute, "first", "second", or "both"', 'both')
   .action(async (day, options) => {
-    await execute(day, options.half);
+    try {
+      await execute(day, options.half);
+    } catch(e) {
+      console.log(e.message);
+    }
   });
 
 commander.parse(process.argv);
@@ -18,7 +23,11 @@ async function execute(day: number, half: string) {
   console.log('Inside execute', day, half);
   const inputFile = path.join(__dirname, 'inputs', `day_${day}_input.txt`);
 
-  const Solution = await import(`./src/day-${day}/solution`);
+  const solutionPath = `./src/day-${day}/solution`;
+  if (!fs.existsSync(solutionPath)) {
+    throw new Error(`No solution file provided for day ${day}.`)
+  }
+  const Solution = await import(solutionPath);
   const solution = new Solution.default(inputFile);
 
   console.log(`Running day ${chalk.yellow(day)}:`);
