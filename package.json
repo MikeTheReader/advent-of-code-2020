@@ -1,0 +1,60 @@
+{
+  "name": "2020-advent-of-code",
+  "version": "1.0.0",
+  "description": "Entries for Advent of Code 2020, done in TypeScript.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikethereader/2020-advent-of-code.git"
+  },
+  "author": "MikeTheReader",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn clean && tsc -p .",
+    "clean": "npx rimraf out coverage",
+    "coverage": "yarn test --coverage && open coverage/lcov-report/index.html",
+    "format": "yarn prettier && yarn lint",
+    "lint": "tslint --fix -c tslint.json -p .",
+    "prettier": "prettier --write \"./**/*.ts\" \"*.json\"",
+    "tdd": "jest --watch",
+    "test": "jest",
+    "watch": "yarn clean; tsc -p . -w",
+    "execute": "ts-node index.ts execute"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "prettier --write",
+      "yarn lint",
+      "git add"
+    ],
+    "src/**/*.json": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "commander": "^4.0.1",
+    "rimraf": "^3.0.0",
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.22",
+    "@types/node": "^12.12.7",
+    "@types/source-map-support": "^0.5.0",
+    "codecov": "^3.6.5",
+    "husky": "^3.0.9",
+    "jest": "26",
+    "lint-staged": "10.2",
+    "prettier": "^1.19.1",
+    "ts-jest": "26",
+    "ts-node": "^8.5.0",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "3.8"
+  }
+}
