@@ -23,12 +23,10 @@
   "lint-staged": {
     "src/**/*.ts": [
       "prettier --write",
-      "yarn lint",
-      "git add"
+      "yarn lint"
     ],
     "src/**/*.json": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "husky": {
