@@ -9,7 +9,7 @@ export interface Coordinate {
 }
 
 export default class Grid<T> {
-  public static fromGrid(grid: Grid<any>): Grid<any> {
+  public static fromGrid(grid: Grid<unknown>): Grid<unknown> {
     const newGrid = new Grid();
     grid.processCells(coord => {
       newGrid.setValue(coord, grid.getValue(coord));
@@ -36,7 +36,7 @@ export default class Grid<T> {
     return this.gridArrays[y][x];
   }
 
-  public setValue({ x, y }: Coordinate, value: T) {
+  public setValue({ x, y }: Coordinate, value: T): void {
     if (!this.gridArrays[y]) {
       this.gridArrays[y] = [] as T[];
     }
@@ -53,7 +53,7 @@ export default class Grid<T> {
     return matches;
   }
 
-  public processCells(callback: (coord: Coordinate, index: number) => void) {
+  public processCells(callback: (coord: Coordinate, index: number) => void): void {
     const height = this.gridArrays.length;
     const width = this.gridArrays[0].length;
     let index = 0;
@@ -64,9 +64,9 @@ export default class Grid<T> {
     }
   }
 
-  public processCellsInRadar(center: Coordinate, callback: (coord: Coordinate, index: number) => void) {
+  public processCellsInRadar(center: Coordinate, callback: (coord: Coordinate, index: number) => void): void {
     const anglePoints = [];
-    this.processCells((cell, index) => {
+    this.processCells(cell => {
       if (JSON.stringify(cell) !== JSON.stringify(center)) {
         const angle = Math.atan2(cell.x - center.x, cell.y - center.y) * (180 / Math.PI);
         anglePoints.push({ angle, point: cell });
@@ -83,12 +83,12 @@ export default class Grid<T> {
       return aDistance - bDistance;
     });
 
-    anglePoints.forEach(({ angle, point }, index) => {
+    anglePoints.forEach(({ point }, index) => {
       callback(point, index);
     });
   }
 
-  public processSpiral(center: Coordinate, callback: (coord: Coordinate, index: number) => void) {
+  public processSpiral(center: Coordinate, callback: (coord: Coordinate, index: number) => void): void {
     let radius = 1;
     let index = 0;
     const height = this.gridArrays.length;
@@ -151,7 +151,7 @@ export default class Grid<T> {
     return this.gridArrays;
   }
 
-  public setGridArrays(gridArrays: T[][]) {
+  public setGridArrays(gridArrays: T[][]): void {
     this.gridArrays = gridArrays;
   }
 

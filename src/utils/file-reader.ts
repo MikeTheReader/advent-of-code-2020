@@ -4,7 +4,7 @@ import * as readline from 'readline';
 export default class FileReader {
   constructor(private lineProcessor: (str) => void) {}
 
-  public async processFile(filePath: string) {
+  public async processFile(filePath: string): Promise<void> {
     const fileStream = fs.createReadStream(filePath);
 
     const linereader = readline.createInterface({
@@ -18,7 +18,7 @@ export default class FileReader {
   }
 }
 
-export function processFile(file: string, lineProcessor: (str) => void) {
+export function processFile(file: string, lineProcessor: (str) => void): Promise<void> {
   const reader = new FileReader(lineProcessor);
   return reader.processFile(file);
 }
