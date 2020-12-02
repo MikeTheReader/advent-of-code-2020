@@ -23,7 +23,8 @@ async function execute(day: number, half: string) {
   console.log('Inside execute', day, half);
   const inputFile = path.join(__dirname, 'inputs', `day_${day}_input.txt`);
 
-  const solutionPath = `./src/day-${day}/solution`;
+  const solutionPath = `./src/day-${day}/solution.ts`;
+  console.log(solutionPath)
   if (!fs.existsSync(solutionPath)) {
     throw new Error(`No solution file provided for day ${day}.`)
   }
@@ -33,13 +34,17 @@ async function execute(day: number, half: string) {
   console.log(`Running day ${chalk.yellow(day)}:`);
 
   if (half === 'both' || half === 'first') {
+    const start = +new Date();
     const firstHalfResults = getStringResults(await solution.executeFirstHalf());
-    console.log(`\tFirst half: ${chalk.blue(firstHalfResults)}`);
+    const timeElapsed = +new Date() - start;
+    console.log(`\tFirst half: ${chalk.blue(firstHalfResults)} (${chalk.grey(timeElapsed)} ms)`);
   }
 
   if (half === 'both' || half === 'second') {
+    const start = +new Date();
     const secondHalfResults = getStringResults(await solution.executeSecondHalf());
-    console.log(`\tSecond half: ${chalk.blue(secondHalfResults)}`);
+    const timeElapsed = +new Date() - start;
+    console.log(`\tSecond half: ${chalk.blue(secondHalfResults)} (${chalk.grey(timeElapsed)} ms)`);
   }
 }
 
