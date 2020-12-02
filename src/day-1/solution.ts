@@ -2,21 +2,25 @@ import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
 
 export default class DayOneSolution extends Solution {
+  private numArray: number[] = [];
+
+  private async populateData(): Promise<void> {
+    if (this.numArray.length === 0) {
+      await processFile(this.file, line => {
+        this.numArray.push(+line);
+      });
+    }
+  }
+
   public async executeFirstHalf(): Promise<number> {
-    const numArray: number[] = [];
-    await processFile(this.file, line => {
-      numArray.push(+line);
-    });
-    const [numOne, numTwo] = this.findTwoNumbers(numArray, 2020);
+    await this.populateData();
+    const [numOne, numTwo] = this.findTwoNumbers(this.numArray, 2020);
     return numOne * numTwo;
   }
 
   public async executeSecondHalf(): Promise<number> {
-    const numArray: number[] = [];
-    await processFile(this.file, line => {
-      numArray.push(+line);
-    });
-    const [numOne, numTwo, numThree] = this.findThreeNumbers(numArray, 2020);
+    await this.populateData();
+    const [numOne, numTwo, numThree] = this.findThreeNumbers(this.numArray, 2020);
     return numOne * numTwo * numThree;
   }
 
