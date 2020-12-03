@@ -25,14 +25,7 @@ export function checkPositionPassword(passSchema: string): boolean {
 
 function validatePositionPassword(firstPos: number, secondPos: number, letter: string, password: string): boolean {
   const passArray = password.split('');
-  let valid = false;
-  if (passArray[firstPos - 1] === letter) {
-    valid = true;
-    if (passArray[secondPos - 1] === letter) {
-      valid = false;
-    }
-  } else if (passArray[secondPos - 1] === letter) {
-    valid = true;
-  }
-  return valid;
+  const matchFirstPos = passArray[firstPos - 1] === letter;
+  const matchSecondPos = passArray[secondPos - 1] === letter;
+  return matchFirstPos !== matchSecondPos;
 }
