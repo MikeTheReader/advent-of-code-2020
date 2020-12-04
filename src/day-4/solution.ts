@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-
+import { fieldValidations } from './validations';
 export default class DayFourSolution extends Solution {
   private async parseFile() {
     const passportStrings = await this.readPassportLines();
@@ -50,59 +50,13 @@ export default class DayFourSolution extends Solution {
 
   public async executeSecondHalf(): Promise<number> {
     const passports = await this.parseFile();
-    const requiredFields = Object.keys(this.fieldValidations);
+    const requiredFields = Object.keys(fieldValidations);
     const validPassports = passports.filter(passport => {
       if (!requiredFields.every(field => passport[field])) return false;
       return requiredFields.every(field => {
-        const valid = this.fieldValidations[field](passport[field]);
-        return valid;
+        return fieldValidations[field](passport[field]);
       });
     });
     return validPassports.length;
-  }
-
-  private hairColorSchema = /#[0-9a-f]{6}/;
-  private pidSchema = /^[0-9]{9}$/;
-
-  private fieldValidations = {
-    byr: this.validateNumRange(1920, 2002),
-    iyr: this.validateNumRange(2010, 2020),
-    eyr: this.validateNumRange(2020, 2030),
-    hgt: this.validateHeight.bind(this),
-    hcl: this.validateHairColor.bind(this),
-    ecl: this.validateEyeColor.bind(this),
-    pid: this.validatePID.bind(this)
-  };
-
-  private validateNumRange(min: number, max: number): (value: string) => boolean {
-    return value => {
-      return +value >= min && +value <= max;
-    };
-  }
-
-  private validateHairColor(value) {
-    return this.hairColorSchema.test(value);
-  }
-
-  private validatePID(value) {
-    return this.pidSchema.test(value);
-  }
-
-  private validateHeight(value) {
-    const heightSchema = /(\d*)(in|cm)/;
-    if (!heightSchema.test(value)) return false;
-    const matches = value.match(heightSchema);
-    const numString = matches[1];
-    const units = matches[2];
-    const num = +numString;
-    if (units === 'in') {
-      return num >= 59 && num <= 76;
-    }
-    return num >= 150 && num <= 193;
-  }
-
-  private validateEyeColor(value) {
-    const validEyeColors = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'];
-    return validEyeColors.includes(value);
   }
 }
