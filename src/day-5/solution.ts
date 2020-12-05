@@ -20,4 +20,22 @@ export default class DayFiveSolution extends Solution {
       return Math.max(max, parsedPass[0] * 8 + parsedPass[1]);
     }, -1);
   }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    const ids = this.passArray.map(pass => {
+      const parsedPass = parsePass(pass);
+      return parsedPass[0] * 8 + parsedPass[1];
+    });
+    ids.sort((a, b) => a - b);
+    let myId = -1;
+    ids.some((currentId, index) => {
+      if (currentId !== ids[index + 1] - 1) {
+        myId = currentId + 1;
+        return true;
+      }
+      return false;
+    });
+    return myId;
+  }
 }
