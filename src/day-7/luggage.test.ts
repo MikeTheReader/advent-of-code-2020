@@ -1,6 +1,37 @@
-import { parseRules } from './luggage';
+import { findContaining, parseRules } from './luggage';
 
 describe('luggage', () => {
+  const ruleData = {
+    'light red': {
+      'bright white': 1,
+      'muted yellow': 2
+    },
+    'dark orange': {
+      'bright white': 3,
+      'muted yellow': 4
+    },
+    'bright white': {
+      'shiny gold': 1
+    },
+    'muted yellow': {
+      'shiny gold': 2,
+      'faded blue': 9
+    },
+    'shiny gold': {
+      'dark olive': 1,
+      'vibrant plum': 2
+    },
+    'dark olive': {
+      'faded blue': 3,
+      'dotted black': 4
+    },
+    'vibrant plum': {
+      'faded blue': 5,
+      'dotted black': 6
+    },
+    'faded blue': {},
+    'dotted black': {}
+  };
   describe('parseRules', () => {
     it('creates correct data structure for sample data', () => {
       const lines = [
@@ -14,37 +45,12 @@ describe('luggage', () => {
         'faded blue bags contain no other bags.',
         'dotted black bags contain no other bags.'
       ];
-      expect(parseRules(lines)).toEqual({
-        'light red': {
-          'bright white': 1,
-          'muted yellow': 2
-        },
-        'dark orange': {
-          'bright white': 3,
-          'muted yellow': 4
-        },
-        'bright white': {
-          'shiny gold': 1
-        },
-        'muted yellow': {
-          'shiny gold': 2,
-          'faded blue': 9
-        },
-        'shiny gold': {
-          'dark olive': 1,
-          'vibrant plum': 2
-        },
-        'dark olive': {
-          'faded blue': 3,
-          'dotted black': 4
-        },
-        'vibrant plum': {
-          'faded blue': 5,
-          'dotted black': 6
-        },
-        'faded blue': {},
-        'dotted black': {}
-      });
+      expect(parseRules(lines)).toEqual(ruleData);
+    });
+  });
+  describe('countContainers', () => {
+    it('finds the correct number of containing bags', () => {
+      expect(findContaining(ruleData, 'shiny gold').length).toBe(4);
     });
   });
 });

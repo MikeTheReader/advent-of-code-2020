@@ -13,3 +13,16 @@ export function parseRules(lines: string[]): any {
   });
   return ruleObject;
 }
+
+export function findContaining(rules: any, target: string): string[] {
+  return Object.keys(rules).filter(container => contains(rules, container, target));
+}
+
+function contains(rules: any, container: string, target: string): boolean {
+  return Object.keys(rules[container]).some(contained => {
+    if (contained === target) {
+      return true;
+    }
+    return contains(rules, contained, target);
+  });
+}
