@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findLoop } from './console';
+import { findLoop, fixProgram } from './console';
 
 export default class DayEightSolution extends Solution {
   private commands: string[] = [];
@@ -14,6 +14,11 @@ export default class DayEightSolution extends Solution {
 
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
-    return findLoop(this.commands);
+    return findLoop(this.commands).accumulator;
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return fixProgram(this.commands);
   }
 }
