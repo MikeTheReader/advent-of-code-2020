@@ -41,8 +41,8 @@ export function fixProgram(commands: string[]): number {
 
   while (!terminated) {
     const commandCopy = commands.slice(0);
-    let i = 0;
-    for (i = index; i < commandCopy.length; i++) {
+    let i = index;
+    for (; i < commandCopy.length; i++) {
       if (commands[index].startsWith(find)) {
         index = i;
         break;
