@@ -1,7 +1,7 @@
-import { findContaining, parseRules } from './luggage';
+import { countContainedBags, findContaining, IBagRules, parseRules } from './luggage';
 
 describe('luggage', () => {
-  const ruleData = {
+  const ruleData: IBagRules = {
     'light red': {
       'bright white': 1,
       'muted yellow': 2
@@ -48,9 +48,27 @@ describe('luggage', () => {
       expect(parseRules(lines)).toEqual(ruleData);
     });
   });
-  describe('countContainers', () => {
+  describe('findContaining', () => {
     it('finds the correct number of containing bags', () => {
       expect(findContaining(ruleData, 'shiny gold').length).toBe(4);
+    });
+  });
+  describe('countContainedBags', () => {
+    it('finds the correct number of all bags contained in a shiny gold bag', () => {
+      expect(countContainedBags(ruleData, 'shiny gold')).toBe(32);
+    });
+    it('finds the correct number of all bags in the second test case', () => {
+      const lines = [
+        'shiny gold bags contain 2 dark red bags.',
+        'dark red bags contain 2 dark orange bags.',
+        'dark orange bags contain 2 dark yellow bags.',
+        'dark yellow bags contain 2 dark green bags.',
+        'dark green bags contain 2 dark blue bags.',
+        'dark blue bags contain 2 dark violet bags.',
+        'dark violet bags contain no other bags.'
+      ];
+      const rules = parseRules(lines);
+      expect(countContainedBags(rules, 'shiny gold')).toBe(126);
     });
   });
 });

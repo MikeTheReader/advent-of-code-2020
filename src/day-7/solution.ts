@@ -1,9 +1,9 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findContaining, parseRules } from './luggage';
+import { countContainedBags, findContaining, IBagRules, parseRules } from './luggage';
 
 export default class DaySixSolution extends Solution {
-  private rules: any = {};
+  private rules: IBagRules = {};
 
   private async populateData(): Promise<void> {
     const lines = [];
@@ -16,5 +16,10 @@ export default class DaySixSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return findContaining(this.rules, 'shiny gold').length;
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return countContainedBags(this.rules, 'shiny gold');
   }
 }
