@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findInvalidNumber } from './port';
+import { findEncryptionWeakness, findInvalidNumber } from './port';
 
 export default class DayNineSolution extends Solution {
   private data: number[] = [];
@@ -15,5 +15,10 @@ export default class DayNineSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return findInvalidNumber(25, this.data);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return findEncryptionWeakness(25, this.data);
   }
 }

@@ -20,3 +20,28 @@ export function findInvalidNumber(preambleLength: number, data: number[]): numbe
   }
   return candidate;
 }
+
+export function findEncryptionWeakness(preambleLength: number, data: number[]): number {
+  const targetNumber = findInvalidNumber(preambleLength, data);
+  let index = 0;
+  let size = 1;
+  let group: number[] = [];
+  let groupFound = false;
+  while (!groupFound) {
+    while (index + size < data.length) {
+      group = data.slice(index, index + size);
+      const sum = group.reduce((result, number) => result + number);
+      if (sum === targetNumber) {
+        groupFound = true;
+        break;
+      } else if (sum > targetNumber) {
+        size = 1;
+        break;
+      }
+      size++;
+    }
+    index++;
+  }
+
+  return Math.max(...group) + Math.min(...group);
+}
