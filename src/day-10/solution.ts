@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findJumps } from './joltage';
+import { findArrangementCount, findJumps } from './joltage';
 
 export default class DayTenSolution extends Solution {
   private data: number[] = [];
@@ -16,5 +16,10 @@ export default class DayTenSolution extends Solution {
     await this.populateData();
     const jumps = findJumps(this.data);
     return jumps.one * jumps.three;
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return findArrangementCount(this.data);
   }
 }
