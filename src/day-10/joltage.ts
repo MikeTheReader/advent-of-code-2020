@@ -3,10 +3,12 @@ interface IJumps {
   three: number;
 }
 
+interface IJoltTree {
+  [joltage: string]: number[];
+}
+
 export function findJumps(data: number[]): IJumps {
-  const sortedData = [...data].sort((a, b) => a - b);
-  sortedData.unshift(0);
-  sortedData.push(sortedData[sortedData.length - 1] + 3);
+  const sortedData = sortAndAddBookends(data);
 
   return sortedData.reduce(
     (jumps: IJumps, jolt: number, index: number) => {
@@ -25,26 +27,37 @@ export function findJumps(data: number[]): IJumps {
 }
 
 export function findArrangementCount(data: number[]): number {
+  const sortedData = sortAndAddBookends(data);
+  const nodes = createNodeTree(sortedData);
+  return countPaths(sortedData, nodes);
+}
+
+function sortAndAddBookends(data: number[]) {
   const sortedData = [...data].sort((a, b) => a - b);
   sortedData.unshift(0);
   sortedData.push(sortedData[sortedData.length - 1] + 3);
+  return sortedData;
+}
 
-  const nodes = sortedData.reduce((nodes, value, index) => {
-    if (!sortedData[index + 1]) {
+function createNodeTree(data: number[]): IJoltTree {
+  return data.reduce((nodes, value, index) => {
+    if (!data[index + 1]) {
       nodes[value] = [];
       return nodes;
     }
-    const pathsToFollow = [sortedData[index + 1]];
-    if (sortedData[index + 2] && sortedData[index + 2] - value <= 3) {
-      pathsToFollow.push(sortedData[index + 2]);
+    const possibleNextJoltage = [data[index + 1]];
+    if (data[index + 2] && data[index + 2] - value <= 3) {
+      possibleNextJoltage.push(data[index + 2]);
     }
-    if (sortedData[index + 3] && sortedData[index + 3] - value <= 3) {
-      pathsToFollow.push(sortedData[index + 3]);
+    if (data[index + 3] && data[index + 3] - value <= 3) {
+      possibleNextJoltage.push(data[index + 3]);
     }
-    nodes[value] = pathsToFollow;
+    nodes[value] = possibleNextJoltage;
     return nodes;
-  }, {});
+  }, {} as IJoltTree);
+}
 
+function countPaths(sortedData: number[], nodes: IJoltTree) {
   const pathsForNode = {};
 
   sortedData.reverse().forEach(node => {
