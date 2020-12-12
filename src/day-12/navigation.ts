@@ -95,3 +95,70 @@ export function findDistance(steps: string[]): number {
   });
   return Math.abs(northSouth) + Math.abs(eastWest);
 }
+
+export function findWaypointDistance(steps: string[]): number {
+  let waypointEastWest = 10;
+  let waypointNorthSouth = 1;
+  let eastWest = 0;
+  let northSouth = 0;
+  steps.forEach(step => {
+    const matches = step.match(stepSchema);
+    const action = matches[1];
+    const value = +matches[2];
+    switch (action) {
+      case 'R': {
+        const rightMoves = value / 90;
+        for (let i = 0; i < rightMoves; i++) {
+          const newWaypointEastWest = waypointNorthSouth;
+          const newWaypointNorthSouth = -waypointEastWest;
+          waypointNorthSouth = newWaypointNorthSouth;
+          waypointEastWest = newWaypointEastWest;
+        }
+        break;
+      }
+      case 'L': {
+        const rightMoves = value / 90;
+        for (let i = 0; i < rightMoves; i++) {
+          const newWaypointEastWest = -waypointNorthSouth;
+          const newWaypointNorthSouth = waypointEastWest;
+          waypointNorthSouth = newWaypointNorthSouth;
+          waypointEastWest = newWaypointEastWest;
+        }
+        break;
+      }
+      case 'F': {
+        for (let i = 0; i < value; i++) {
+          eastWest += waypointEastWest;
+          northSouth += waypointNorthSouth;
+        }
+        break;
+      }
+      case 'E':
+      case 'W':
+      case 'S':
+      case 'N': {
+        const moveDirection = directionMap[action];
+        switch (moveDirection) {
+          case Direction.North: {
+            waypointNorthSouth += value;
+            break;
+          }
+          case Direction.South: {
+            waypointNorthSouth -= value;
+            break;
+          }
+          case Direction.East: {
+            waypointEastWest += value;
+            break;
+          }
+          case Direction.West: {
+            waypointEastWest -= value;
+            break;
+          }
+        }
+        break;
+      }
+    }
+  });
+  return Math.abs(northSouth) + Math.abs(eastWest);
+}

@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findDistance } from './navigation';
+import { findDistance, findWaypointDistance } from './navigation';
 
 export default class DayElevenSolution extends Solution {
   private data: string[] = [];
@@ -15,5 +15,10 @@ export default class DayElevenSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return findDistance(this.data);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return findWaypointDistance(this.data);
   }
 }
