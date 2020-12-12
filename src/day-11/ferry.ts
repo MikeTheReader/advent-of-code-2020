@@ -109,7 +109,7 @@ function checkCellSightline(isOccupied: boolean, grid: Grid<string>, coordinate:
   return returnValue;
 }
 
-function countNeighborsSightline(grid, { x, y }: Coordinate) {
+function countNeighborsSightline(grid: Grid<string>, coordinate: Coordinate) {
   const candidates = [
     [-1, -1],
     [0, -1],
@@ -122,15 +122,14 @@ function countNeighborsSightline(grid, { x, y }: Coordinate) {
   ];
 
   return candidates.filter(entry => {
-    let currentCell = { x: x + entry[0], y: y + entry[1] };
-    let currentValue = grid.getValue(currentCell);
-    let found = currentValue === '#';
-    while (!found) {
-      if (currentValue === 'L' || !currentValue) break;
+    let currentCell = coordinate;
+    let found = false;
+    do {
       currentCell = { x: currentCell.x + entry[0], y: currentCell.y + entry[1] };
-      currentValue = grid.getValue(currentCell);
+      const currentValue = grid.getValue(currentCell);
+      if (currentValue === 'L' || !currentValue) break;
       found = currentValue === '#';
-    }
+    } while (!found);
     return found;
   }).length;
 }
