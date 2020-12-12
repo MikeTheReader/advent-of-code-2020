@@ -1,4 +1,4 @@
-import Grid from '../utils/grid';
+import Grid, { Coordinate } from '../utils/grid';
 
 export function countOccupiedSeats(startingPositions: string[]): number {
   return processSeats(startingPositions, checkCellSimple);
@@ -8,7 +8,10 @@ export function countOccupiedSeatsSightline(startingPositions: string[]): number
   return processSeats(startingPositions, checkCellSightline);
 }
 
-function processSeats(startingPositions: string[], checkFunction) {
+function processSeats(
+  startingPositions: string[],
+  checkFunction: (isOccupied: boolean, grid: Grid<string>, coordinate: Coordinate) => string
+) {
   const gridArrays = startingPositions.map(row => row.split(''));
   const seatGrid = new Grid<string>();
   seatGrid.setGridArrays(gridArrays);
@@ -28,8 +31,8 @@ function processSeats(startingPositions: string[], checkFunction) {
 
 function countOccupied(grid): number {
   let count = 0;
-  grid.processCells(({ x, y }) => {
-    const cellValue = grid.getValue({ x, y });
+  grid.processCells((coordinate: Coordinate) => {
+    const cellValue = grid.getValue(coordinate);
     if (cellValue === '#') {
       count++;
     }
@@ -37,20 +40,24 @@ function countOccupied(grid): number {
   return count;
 }
 
-export function runStep(seatGrid: Grid<string>, currentGrid: Grid<string>, checkFunction): Grid<string> {
+export function runStep(
+  seatGrid: Grid<string>,
+  currentGrid: Grid<string>,
+  checkFunction: (isOccupied: boolean, grid: Grid<string>, coordinate: Coordinate) => string
+): Grid<string> {
   const afterStepGrid = Grid.fromGrid(currentGrid);
-  afterStepGrid.processCells(({ x, y }) => {
-    let newCellValue = currentGrid.getValue({ x, y });
-    if (seatGrid.getValue({ x, y }) === 'L') {
-      newCellValue = checkFunction(newCellValue === '#', currentGrid, x, y);
+  afterStepGrid.processCells((coordinate: Coordinate) => {
+    let newCellValue = currentGrid.getValue(coordinate);
+    if (seatGrid.getValue(coordinate) === 'L') {
+      newCellValue = checkFunction(newCellValue === '#', currentGrid, coordinate);
     }
-    afterStepGrid.setValue({ x, y }, newCellValue);
+    afterStepGrid.setValue(coordinate, newCellValue);
   });
   return afterStepGrid as Grid<string>;
 }
 
-function checkCellSimple(isOccupied, grid, x, y) {
-  const neighborCount = countNeighbors(grid, x, y);
+function checkCellSimple(isOccupied: boolean, grid: Grid<string>, coordinate: Coordinate) {
+  const neighborCount = countNeighbors(grid, coordinate);
 
   let returnValue = 'L';
   if (isOccupied) {
@@ -67,7 +74,7 @@ function checkCellSimple(isOccupied, grid, x, y) {
   return returnValue;
 }
 
-function countNeighbors(grid, x, y) {
+function countNeighbors(grid, { x, y }: Coordinate) {
   const candidates = [
     [y - 1, x - 1],
     [y, x - 1],
@@ -84,8 +91,8 @@ function countNeighbors(grid, x, y) {
   return neighbors;
 }
 
-function checkCellSightline(isOccupied, grid, x, y) {
-  const neighborCount = countNeighborsSightline(grid, x, y);
+function checkCellSightline(isOccupied: boolean, grid: Grid<string>, coordinate: Coordinate) {
+  const neighborCount = countNeighborsSightline(grid, coordinate);
 
   let returnValue = 'L';
   if (isOccupied) {
@@ -102,7 +109,7 @@ function checkCellSightline(isOccupied, grid, x, y) {
   return returnValue;
 }
 
-function countNeighborsSightline(grid, x, y) {
+function countNeighborsSightline(grid, { x, y }: Coordinate) {
   const candidates = [
     [-1, -1],
     [0, -1],
