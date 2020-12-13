@@ -28,6 +28,7 @@ export function winContest(busses: string): number {
       divisors.push({ busNumber: new Big(+busNumber), minute: index });
     }
   });
+  // Had to look up the math for this: It's called the Chinese Remainder Theorem
   const product = divisors.reduce((total, div) => total.times(div.busNumber), new Big(1));
   const partialProducts = divisors.map(div => product.div(div.busNumber));
   const inverses = divisors.map((div, index) => computeInverse(partialProducts[index], divisors[index].busNumber));
