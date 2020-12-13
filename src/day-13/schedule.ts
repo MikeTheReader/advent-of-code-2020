@@ -1,4 +1,6 @@
-export function findBus(readyMinute: number, busses: string) {
+import Big from 'big.js';
+
+export function findBus(readyMinute: number, busses: string): number {
   const busNumbers = busses
     .split(',')
     .filter(num => num !== 'x')
@@ -18,27 +20,33 @@ export function findBus(readyMinute: number, busses: string) {
   return smallestBus * smallestMinute;
 }
 
-export function winContest(busses: string) {
+export function winContest(busses: string): number {
   const busNumbers = busses.split(',');
   const divisors = [];
   busNumbers.forEach((busNumber, index) => {
     if (busNumber !== 'x') {
-      divisors.push({ busNumber: +busNumber, minute: index });
+      divisors.push({ busNumber: new Big(+busNumber), minute: index });
     }
   });
-  const product = divisors.reduce((total, div) => total * div.busNumber, 1);
-  const partialProducts = divisors.map(div => product / div.busNumber);
+  const product = divisors.reduce((total, div) => total.times(div.busNumber), new Big(1));
+  const partialProducts = divisors.map(div => product.div(div.busNumber));
   const inverses = divisors.map((div, index) => computeInverse(partialProducts[index], divisors[index].busNumber));
   const sum = divisors.reduce((total, div, index) => {
-    total += partialProducts[index] * inverses[index] * (div.busNumber - div.minute);
+    total = total.plus(partialProducts[index].times(inverses[index]).times(div.busNumber.minus(div.minute)));
     return total;
-  }, 0);
-  return sum % product;
+  }, new Big(0));
+  return sum.mod(product).toNumber();
 }
 
-function computeInverse(a, m) {
-  a = a % m;
-  for (let x = 1; x < m; x++) {
-    if ((a * x) % m == 1) return x;
+function computeInverse(a: Big, m: Big): Big {
+  a = a.mod(m);
+  for (let x = new Big(1); x.lt(m); x = x.plus(1)) {
+    if (
+      a
+        .times(x)
+        .mod(m)
+        .eq(1)
+    )
+      return x;
   }
 }
