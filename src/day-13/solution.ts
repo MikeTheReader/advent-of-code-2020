@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { findBus } from './schedule';
+import { findBus, winContest } from './schedule';
 
 export default class DayThirteenSolution extends Solution {
   private minute: number;
@@ -19,5 +19,10 @@ export default class DayThirteenSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return findBus(this.minute, this.data);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return winContest(this.data);
   }
 }

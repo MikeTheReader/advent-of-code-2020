@@ -17,3 +17,27 @@ export function findBus(readyMinute: number, busses: string) {
   });
   return smallestBus * smallestMinute;
 }
+
+export function winContest(busses: string) {
+  const busNumbers = busses.split(',');
+  const divisors = [];
+  busNumbers.forEach((busNumber, index) => {
+    if (busNumber !== 'x') {
+      divisors.push({ busNumber, minute: index });
+    }
+  });
+  let num = 1;
+  let answer = -1;
+  while (answer === -1) {
+    const matches = divisors.every(div => {
+      return (num + div.minute) % div.busNumber === 0;
+    });
+    if (matches) {
+      answer = num;
+      break;
+    }
+    console.log(num);
+    num++;
+  }
+  return answer;
+}
