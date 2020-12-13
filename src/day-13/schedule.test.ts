@@ -24,6 +24,9 @@ describe('schedule', () => {
 
       const busses5 = '17,x,13,19';
       expect(winContest(busses5)).toBe(3417);
+
+      const busses6 = '67,7,59,61';
+      expect(winContest(busses6)).toBe(754018);
     });
   });
 });

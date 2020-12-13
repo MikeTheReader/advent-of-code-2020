@@ -20,7 +20,6 @@ export function findBus(readyMinute: number, busses: string) {
 
 export function winContest(busses: string) {
   const busNumbers = busses.split(',');
-  console.log(busNumbers);
   const divisors = [];
   busNumbers.forEach((busNumber, index) => {
     if (busNumber !== 'x') {
