@@ -20,24 +20,26 @@ export function findBus(readyMinute: number, busses: string) {
 
 export function winContest(busses: string) {
   const busNumbers = busses.split(',');
+  console.log(busNumbers);
   const divisors = [];
   busNumbers.forEach((busNumber, index) => {
     if (busNumber !== 'x') {
-      divisors.push({ busNumber, minute: index });
+      divisors.push({ busNumber: +busNumber, minute: index });
     }
   });
-  let num = 1;
-  let answer = -1;
-  while (answer === -1) {
-    const matches = divisors.every(div => {
-      return (num + div.minute) % div.busNumber === 0;
-    });
-    if (matches) {
-      answer = num;
-      break;
-    }
-    console.log(num);
-    num++;
+  const product = divisors.reduce((total, div) => total * div.busNumber, 1);
+  const partialProducts = divisors.map(div => product / div.busNumber);
+  const inverses = divisors.map((div, index) => computeInverse(partialProducts[index], divisors[index].busNumber));
+  const sum = divisors.reduce((total, div, index) => {
+    total += partialProducts[index] * inverses[index] * (div.busNumber - div.minute);
+    return total;
+  }, 0);
+  return sum % product;
+}
+
+function computeInverse(a, m) {
+  a = a % m;
+  for (let x = 1; x < m; x++) {
+    if ((a * x) % m == 1) return x;
   }
-  return answer;
 }
