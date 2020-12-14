@@ -1,8 +1,8 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { applyBitmask } from './decoder';
+import { applyBitmask, memoryDecoder } from './decoder';
 
-export default class DayThirteenSolution extends Solution {
+export default class DayFourteenSolution extends Solution {
   private data: string[] = [];
 
   private async populateData(): Promise<void> {
@@ -15,5 +15,10 @@ export default class DayThirteenSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return applyBitmask(this.data);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return memoryDecoder(this.data);
   }
 }
