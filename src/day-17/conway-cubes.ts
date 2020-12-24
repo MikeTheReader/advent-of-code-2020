@@ -4,7 +4,10 @@ interface IDimensionalSpace {
   [key: number]: Grid<string>;
 }
 
+let variances: number[][];
+
 export function countActiveCubes(startData: string[], numCycles = 2): number {
+  variances = createVariances(3);
   let dimensionalSpace = parseStartData(startData, numCycles);
   for (let i = 0; i < numCycles; i++) {
     dimensionalSpace = tick(dimensionalSpace);
@@ -35,37 +38,6 @@ function tick(originalSpace: IDimensionalSpace): IDimensionalSpace {
 }
 
 function getNeighbors(space: IDimensionalSpace, coord: Coordinate, z: number) {
-  const variances = [
-    [-1, -1, -1],
-    [-1, 0, -1],
-    [-1, 1, -1],
-    [-1, -1, 0],
-    [-1, 0, 0],
-    [-1, 1, 0],
-    [-1, -1, 1],
-    [-1, 0, 1],
-    [-1, 1, 1],
-
-    [0, -1, -1],
-    [0, 0, -1],
-    [0, 1, -1],
-    [0, -1, 0],
-    [0, 1, 0],
-    [0, -1, 1],
-    [0, 0, 1],
-    [0, 1, 1],
-
-    [1, -1, -1],
-    [1, 0, -1],
-    [1, 1, -1],
-    [1, -1, 0],
-    [1, 0, 0],
-    [1, 1, 0],
-    [1, -1, 1],
-    [1, 0, 1],
-    [1, 1, 1]
-  ];
-
   return variances.reduce((total, variance) => {
     if (space[z + variance[0]]) {
       const value = space[z + variance[0]].getValue({ x: coord.x + variance[1], y: coord.y + variance[2] });
@@ -108,4 +80,30 @@ function copySpace(space: IDimensionalSpace): IDimensionalSpace {
     spaceCopy[key] = Grid.fromGrid(space[key]);
   });
   return spaceCopy;
+}
+
+const possibleValues = [0, 1, -1];
+
+function createVariances(numDimensions: number) {
+  const variances = [];
+  const dimensionCount = Array(numDimensions).fill(0);
+  for (let i = 0; i < Math.pow(possibleValues.length, numDimensions); i++) {
+    const newVariance = [];
+    for (let d = 0; d < numDimensions; d++) {
+      newVariance.push(possibleValues[dimensionCount[d]]);
+    }
+    if (i !== 0) {
+      // skip reference point
+      variances.push(newVariance);
+    }
+    for (let d = 0; d < numDimensions; d++) {
+      if (dimensionCount[d] + 1 < possibleValues.length) {
+        dimensionCount[d]++;
+        break;
+      } else {
+        dimensionCount[d] = 0;
+      }
+    }
+  }
+  return variances;
 }
