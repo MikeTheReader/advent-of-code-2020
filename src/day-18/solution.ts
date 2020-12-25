@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { evaluate } from './maths';
+import { evaluateAdvanced, evaluateBasic } from './maths';
 
 export default class DayEighteenSolution extends Solution {
   private data: string[] = [];
@@ -15,7 +15,14 @@ export default class DayEighteenSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return this.data.reduce((total, line) => {
-      return total + evaluate(line);
+      return total + evaluateBasic(line);
+    }, 0);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return this.data.reduce((total, line) => {
+      return total + evaluateAdvanced(line);
     }, 0);
   }
 }

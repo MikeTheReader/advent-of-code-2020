@@ -1,4 +1,4 @@
-export function evaluate(expression: string): number {
+function evaluate(expression: string, evalFunction: (exp: string) => number): number {
   let simpleExpression = '';
   let depth = 0;
   let subExpression = '';
@@ -10,7 +10,7 @@ export function evaluate(expression: string): number {
     if (character === ')') {
       depth -= 1;
       if (depth === 0) {
-        simpleExpression += evaluate(subExpression);
+        simpleExpression += evaluate(subExpression, evalFunction);
         subExpression = '';
         return;
       }
@@ -21,10 +21,18 @@ export function evaluate(expression: string): number {
       subExpression += character;
     }
   });
-  return evaluateSimpleExpression(simpleExpression);
+  return evalFunction(simpleExpression);
 }
 
-function evaluateSimpleExpression(expression: string): number {
+export function evaluateAdvanced(expression: string): number {
+  return evaluate(expression, evaluateAdvancedExpression);
+}
+
+export function evaluateBasic(expression: string): number {
+  return evaluate(expression, evaluateBasicExpression);
+}
+
+function evaluateBasicExpression(expression: string): number {
   const steps = expression.split(' ');
   let currentOperation;
   return steps.reduce((total, step, index) => {
@@ -39,4 +47,17 @@ function evaluateSimpleExpression(expression: string): number {
     evalString += step;
     return eval(evalString);
   }, 0);
+}
+
+function evaluateAdvancedExpression(expression: string): number {
+  // add first
+  let currentExpression = expression;
+  let newExp = '';
+  while (newExp !== currentExpression) {
+    newExp = currentExpression;
+    currentExpression = currentExpression.replace(/\d* \+ \d*/i, function(exp) {
+      return eval(exp);
+    });
+  }
+  return eval(currentExpression);
 }
