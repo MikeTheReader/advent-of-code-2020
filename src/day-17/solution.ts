@@ -1,6 +1,6 @@
 import Solution from '../solution-base';
 import { processFile } from '../utils/file-reader';
-import { countActiveCubes } from './conway-cubes';
+import { countActiveCubes, countFourDimensions } from './conway-cubes';
 
 export default class DaySeventeenSolution extends Solution {
   private data: string[] = [];
@@ -16,5 +16,10 @@ export default class DaySeventeenSolution extends Solution {
   public async executeFirstHalf(): Promise<number> {
     await this.populateData();
     return countActiveCubes(this.data, 6);
+  }
+
+  public async executeSecondHalf(): Promise<number> {
+    await this.populateData();
+    return countFourDimensions(this.data, 6);
   }
 }
