@@ -155,6 +155,24 @@ export default class Grid<T> {
     this.gridArrays = gridArrays;
   }
 
+  public rotate(): Grid<T> {
+    const tempCopy = Grid.fromGrid(this) as Grid<T>;
+    const height = this.gridArrays.length;
+    const width = this.gridArrays[0].length;
+    this.fill(null, { height, width });
+
+    let column = 0;
+    for (let x = 0; x < width; x++) {
+      let row = 0;
+      for (let y = height - 1; y > -1; y--) {
+        this.setValue({ x: row, y: column }, tempCopy.getValue({ x, y }));
+        row++;
+      }
+      column++;
+    }
+    return this;
+  }
+
   private getRangeForBoxAround(center: Coordinate, radius: number) {
     const height = this.gridArrays.length;
     const width = this.gridArrays[0].length;
