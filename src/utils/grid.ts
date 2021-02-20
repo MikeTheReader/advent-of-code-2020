@@ -173,6 +173,11 @@ export default class Grid<T> {
     return this;
   }
 
+  public flipHorizontal(): Grid<T> {
+    this.gridArrays.reverse();
+    return this;
+  }
+
   private getRangeForBoxAround(center: Coordinate, radius: number) {
     const height = this.gridArrays.length;
     const width = this.gridArrays[0].length;
