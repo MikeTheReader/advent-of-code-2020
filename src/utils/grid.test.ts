@@ -134,7 +134,6 @@ describe('Grid', () => {
       );
     });
   });
-
   describe('flipHorizontal', () => {
     it('flips the grid on the horizontal', () => {
       const grid = new Grid<string>();
@@ -151,6 +150,25 @@ describe('Grid', () => {
 
       expect(grid.flipHorizontal().toString()).toEqual(
         '. . . . . \n' + '. . . . . \n' + '. . * . . \n' + '. * . * . \n' + '* . . . * \n'
+      );
+    });
+  });
+  describe('flipVertical', () => {
+    it('flips the grid on the vertical', () => {
+      const grid = new Grid<string>();
+      grid.fill('.', { height: 5, width: 5 });
+      grid.setValue({ x: 0, y: 0 }, '*');
+      grid.setValue({ x: 1, y: 1 }, '*');
+      grid.setValue({ x: 2, y: 2 }, '*');
+      grid.setValue({ x: 1, y: 3 }, '*');
+      grid.setValue({ x: 0, y: 4 }, '*');
+
+      expect(grid.toString()).toEqual(
+        '* . . . . \n' + '. * . . . \n' + '. . * . . \n' + '. * . . . \n' + '* . . . . \n'
+      );
+
+      expect(grid.flipVertical().toString()).toEqual(
+        '. . . . * \n' + '. . . * . \n' + '. . * . . \n' + '. . . * . \n' + '. . . . * \n'
       );
     });
   });
